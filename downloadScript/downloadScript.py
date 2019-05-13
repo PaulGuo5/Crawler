@@ -5,7 +5,7 @@ import time
 import socket
 import http.client
 from bs4 import BeautifulSoup
-
+import pandas as pd
 
 def get_content(url, search_content):
     header={
@@ -62,6 +62,18 @@ def get_download_url(urls):
         key_words.append("http://software.broadinstitute.org/gsea/msigdb/download_geneset.jsp?geneSetName="+url[6:-5]+"&fileType=grp")
     return key_words
 
+def to_csv(result):
+    dataFrame = pd.DataFrame({'url':result})
+    dataFrame.to_csv("result.csv", index = True, sep=',')
+
+def to_csv2(result):
+    with open("result2.csv","w") as csvfile:
+        writer=csv.writer(csvfile)
+        writer.writerow(["index", "url"])
+        index = 0
+        for row in result:
+            writer.writerow([index, row])
+            index += 1
 
 if __name__ == '__main__':
     url ='http://software.broadinstitute.org/gsea/msigdb/genesets.jsp'
@@ -71,4 +83,6 @@ if __name__ == '__main__':
     # print(result)
     result = get_download_url(new_url)
     print(result)
+    to_csv(result)
+    to_csv2(result)
 
